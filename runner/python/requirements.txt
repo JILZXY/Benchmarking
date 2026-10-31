@@ -1,0 +1,7 @@
+# Dependencias del runner (versiones fijas para reproducibilidad).
+pymongo==4.13.2
+psycopg[binary]==3.2.9
+docker==7.1.0
+PyYAML==6.0.2
+requests==2.32.4
+

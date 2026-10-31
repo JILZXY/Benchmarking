@@ -1,0 +1,33 @@
+# --- Secretos -----------------------------------------------------------------
+.env
+
+# --- Python -------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# --- Artefactos voluminosos o regenerables -------------------------------------
+# El dataset se regenera de forma determinista (semilla + manifiesto con hash).
+dataset/generated/*
+!dataset/generated/.gitkeep
+# Salida cruda del runner y telemetría exportada de Prometheus.
+results/raw/*
+!results/raw/.gitkeep
+results/logs/*
+!results/logs/.gitkeep
+results/telemetry/*
+!results/telemetry/.gitkeep
+# results/normalized, results/summaries, dataset/manifests y evidence/ SÍ se
+# versionan: son la evidencia del experimento.
+
+# --- Sistema / editores --------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

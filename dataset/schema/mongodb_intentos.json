@@ -1,0 +1,21 @@
+{
+  "collection": "intentos",
+  "indexes": [
+    {
+      "name": "idx_intentos_intento_id",
+      "key": {
+        "intento_id": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "idx_intentos_fecha_inicio",
+      "key": {
+        "fecha_inicio": 1
+      },
+      "unique": false
+    }
+  ],
+  "notes": "Equivalencia estricta con PostgreSQL (README §5). No se agregan índices sobre campos de Q1 ni Q2."
+}
+

@@ -1,0 +1,282 @@
+# =============================================================================
+# ETICORE DB Benchmark - Docker Compose
+# =============================================================================
+#
+# Perfiles de Compose (selección de servicios):
+#   (sin perfil)  -> prometheus, cadvisor, node-exporter (siempre activos)
+#   mongodb       -> motor MongoDB (WiredTiger)
+#   postgresql    -> motor PostgreSQL (JSONB)
+#   runner        -> ejecutor del benchmark (trabajo puntual)
+#
+# Perfiles experimentales de recursos (config/profiles/*.env):
+#   PROFILE_A_BASELINE (4 CPU / 4096 MB), PROFILE_B_MEDIUM (2 / 2048),
+#   PROFILE_C_SEVERE (1 / 1024).
+#
+# IMPORTANTE: al pasar --env-file, Compose deja de leer .env automáticamente.
+# Usar siempre ambos archivos (o los wrappers de scripts/setup/):
+#
+#   docker compose --env-file .env --env-file config/profiles/profile_c_severe.env \
+#       --profile postgresql up -d
+#
+# Solo un motor debe estar activo durante un benchmark.
+#
+# Límites de recursos (Docker Engine 29 / Compose v5 / cgroups v2):
+#   cpus           -> cpu.max (cuota CFS; produce container_cpu_cfs_throttled_*)
+#   mem_limit      -> memory.max
+#   memswap_limit  -> memory.swap.max = memswap_limit - mem_limit = 0 (sin swap)
+#   mem_swappiness -> NO se usa: no está soportado en cgroups v2 y Docker lo
+#                     descarta. La ausencia de swap se garantiza con
+#                     memswap_limit == mem_limit.
+# =============================================================================
+
+name: ${COMPOSE_PROJECT_NAME:-eticore-bench}
+
+x-engine-limits: &engine-limits
+  # Límites del motor evaluado. Los valores provienen del perfil experimental.
+  cpus: ${ENGINE_CPUS:?Definir ENGINE_CPUS (usar config/profiles/*.env)}
+  mem_limit: ${ENGINE_MEM_LIMIT:?Definir ENGINE_MEM_LIMIT (usar config/profiles/*.env)}
+  memswap_limit: ${ENGINE_MEM_LIMIT:?Definir ENGINE_MEM_LIMIT (usar config/profiles/*.env)}
+  cpuset: ${ENGINE_CPUSET:-}
+  oom_kill_disable: false
+  # Un OOM debe observarse, no ocultarse con un reinicio automático.
+  restart: "no"
+
+x-monitoring-common: &monitoring-common
+  restart: unless-stopped
+  networks: [benchmark]
+  cpuset: ${MONITORING_CPUSET:-}
+  labels:
+    com.eticore.role: monitoring
+
+services:
+  # ---------------------------------------------------------------------------
+  # Motores evaluados
+  # ---------------------------------------------------------------------------
+  mongodb:
+    <<: *engine-limits
+    image: ${MONGO_IMAGE:-mongo:8.0.12}
+    profiles: [mongodb]
+    command:
+      - mongod
+      - --config
+      - /etc/mongo/mongod.conf
+      - --wiredTigerCacheSizeGB
+      - "${MONGO_WT_CACHE_GB:?Definir MONGO_WT_CACHE_GB (usar config/profiles/*.env)}"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:?Definir MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Definir MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-eticore}
+      BENCH_PROFILE: ${BENCH_PROFILE:-unset}
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_configdb:/data/configdb
+      - ./config/mongodb/mongod.conf:/etc/mongo/mongod.conf:ro
+      - ./docker/mongodb/healthcheck.sh:/usr/local/bin/bench-healthcheck.sh:ro
+    tmpfs:
+      # Marcador del healthcheck; se limpia en cada reinicio del contenedor.
+      - /run/bench:size=1m
+    ulimits:
+      nofile: { soft: 64000, hard: 64000 }
+    ports:
+      - "127.0.0.1:${MONGO_HOST_PORT:-27018}:27017"
+    healthcheck:
+      # Primera verificación con mongosh (ping real); después, comprobación TCP
+      # de costo casi nulo para no consumir CPU/RAM del motor durante la medición.
+      test: ["CMD", "bash", "/usr/local/bin/bench-healthcheck.sh"]
+      interval: ${HEALTHCHECK_INTERVAL:-15s}
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+      start_interval: 2s
+    stop_grace_period: 60s
+    networks: [benchmark]
+    labels:
+      com.eticore.role: engine
+      com.eticore.engine: mongodb
+
+  postgresql:
+    <<: *engine-limits
+    image: ${POSTGRES_IMAGE:-postgres:17.6-bookworm}
+    profiles: [postgresql]
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/postgresql.conf
+      - -c
+      - shared_buffers=${PG_SHARED_BUFFERS:?Definir PG_SHARED_BUFFERS (usar config/profiles/*.env)}
+      - -c
+      - effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE:?Definir PG_EFFECTIVE_CACHE_SIZE (usar config/profiles/*.env)}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Definir POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definir POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-eticore}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C.UTF-8"
+      BENCH_PROFILE: ${BENCH_PROFILE:-unset}
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+      - ./config/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./docker/postgresql/initdb:/docker-entrypoint-initdb.d:ro
+    # /dev/shm se usa para memoria compartida dinámica (consultas paralelas).
+    # Es un máximo, no una reserva, y se contabiliza dentro de mem_limit.
+    shm_size: ${PG_SHM_SIZE:-256m}
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-15432}:5432"
+    healthcheck:
+      # pg_isready por TCP: falla mientras initdb usa el servidor temporal
+      # (que solo escucha en el socket Unix), por lo que no da falsos positivos.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: ${HEALTHCHECK_INTERVAL:-15s}
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+      start_interval: 2s
+    stop_grace_period: 60s
+    networks: [benchmark]
+    labels:
+      com.eticore.role: engine
+      com.eticore.engine: postgresql
+
+  # ---------------------------------------------------------------------------
+  # Monitorización (cgroups propios, fuera de los límites del motor)
+  # ---------------------------------------------------------------------------
+  prometheus:
+    <<: *monitoring-common
+    image: ${PROMETHEUS_IMAGE:-prom/prometheus:v3.5.0}
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=${PROMETHEUS_RETENTION:-30d}
+      - --web.enable-admin-api
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_HOST_PORT:-9090}:9090"
+    cpus: ${PROMETHEUS_CPUS:-1}
+    mem_limit: ${PROMETHEUS_MEM_LIMIT:-1024m}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:9090/-/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      cadvisor:
+        condition: service_started
+      node-exporter:
+        condition: service_started
+
+  cadvisor:
+    <<: *monitoring-common
+    image: ${CADVISOR_IMAGE:-gcr.io/cadvisor/cadvisor:v0.52.1}
+    command:
+      - --housekeeping_interval=1s
+      - --max_housekeeping_interval=2s
+      - --store_container_labels=true
+      # En Docker Engine 29+ con containerd image store (overlayfs), el factory
+      # de Docker falla al buscar layerdb/mounts. Con --docker pointing a un
+      # socket vacío y --raw_cgroup_prefix_whitelist=/docker, cAdvisor lee
+      # directamente cada cgroup v2 (/sys/fs/cgroup/docker/<id>).
+      - --docker=unix:///dev/null
+      - --raw_cgroup_prefix_whitelist=/docker
+      - --disable_metrics=advtcp,cpu_topology,cpuset,disk,diskIO,hugetlb,memory_numa,percpu,process,referenced_memory,resctrl,sched,tcp,udp
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "127.0.0.1:${CADVISOR_HOST_PORT:-8080}:8080"
+    cpus: ${CADVISOR_CPUS:-1}
+    mem_limit: ${CADVISOR_MEM_LIMIT:-512m}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  node-exporter:
+    <<: *monitoring-common
+    image: ${NODE_EXPORTER_IMAGE:-prom/node-exporter:v1.9.1}
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --path.rootfs=/rootfs
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "127.0.0.1:${NODE_EXPORTER_HOST_PORT:-9100}:9100"
+    cpus: ${NODE_EXPORTER_CPUS:-0.5}
+    mem_limit: ${NODE_EXPORTER_MEM_LIMIT:-128m}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:9100/metrics"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Ejecutor del benchmark (trabajo puntual: docker compose run --rm runner ...)
+  # ---------------------------------------------------------------------------
+  runner:
+    build:
+      context: .
+      dockerfile: docker/runner/Dockerfile
+      args:
+        PYTHON_IMAGE: ${RUNNER_PYTHON_IMAGE:-python:3.12.11-slim-bookworm}
+    image: eticore-bench-runner:${RUNNER_IMAGE_TAG:-0.1.0}
+    profiles: [runner]
+    init: true
+    restart: "no"
+    environment:
+      BENCH_PROFILE: ${BENCH_PROFILE:-unset}
+      ENGINE_CPUS: ${ENGINE_CPUS:-}
+      ENGINE_MEM_LIMIT: ${ENGINE_MEM_LIMIT:-}
+      MONGO_HOST: mongodb
+      MONGO_PORT: "27017"
+      MONGO_ROOT_USER: ${MONGO_ROOT_USER:?Definir MONGO_ROOT_USER}
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Definir MONGO_ROOT_PASSWORD}
+      MONGO_DB: ${MONGO_DB:-eticore}
+      POSTGRES_HOST: postgresql
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${POSTGRES_USER:?Definir POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definir POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-eticore}
+      PROMETHEUS_URL: http://prometheus:9090
+      DATASET_SEED: ${DATASET_SEED:-20261030}
+      DATASET_SIZE: ${DATASET_SIZE:-500000}
+      DATASET_AVG_RESPUESTAS: ${DATASET_AVG_RESPUESTAS:-3}
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-eticore-bench}
+    volumes:
+      - ./runner/python:/app/runner
+      - ./config:/app/config:ro
+      - ./workloads:/app/workloads:ro
+      - ./dataset:/app/dataset
+      - ./results:/app/results
+      - ./evidence:/app/evidence
+      # Necesario para inspeccionar contenedores (OOMKilled, límites, logs).
+      - /var/run/docker.sock:/var/run/docker.sock
+    cpus: ${RUNNER_CPUS:-4}
+    mem_limit: ${RUNNER_MEM_LIMIT:-1536m}
+    cpuset: ${RUNNER_CPUSET:-}
+    networks: [benchmark]
+    labels:
+      com.eticore.role: runner
+
+networks:
+  benchmark:
+    name: ${COMPOSE_PROJECT_NAME:-eticore-bench}_net
+
+volumes:
+  mongodb_data:
+  mongodb_configdb:
+  postgresql_data:
+  prometheus_data:

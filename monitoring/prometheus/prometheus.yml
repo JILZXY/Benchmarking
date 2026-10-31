@@ -1,0 +1,33 @@
+# =============================================================================
+# Prometheus - benchmark ETICORE
+# Intervalo de captura: 1 segundo (requisito del experimento).
+# =============================================================================
+global:
+  scrape_interval: 1s
+  scrape_timeout: 900ms # debe ser menor o igual que scrape_interval
+  evaluation_interval: 1s
+  external_labels:
+    experiment: eticore-db-benchmark
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  # Métricas por contenedor: container_cpu_cfs_throttled_seconds_total,
+  # container_memory_rss, container_oom_events_total, etc.
+  - job_name: cadvisor
+    static_configs:
+      - targets: ["cadvisor:8080"]
+    metric_relabel_configs:
+      # Conserva las series con etiqueta del proyecto (cuando cAdvisor usa el
+      # factory de Docker) y las series por cgroup /docker/<container_id> o /
+      # (cuando cAdvisor opera en modo raw_cgroup con containerd image store).
+      - source_labels: [id, container_label_com_eticore_role]
+        regex: "/;|/docker/[0-9a-f]{12,64};.*|.+;(engine|monitoring|runner)"
+        action: keep
+
+  # Métricas del anfitrión (en Docker Desktop: la VM de WSL2).
+  - job_name: node-exporter
+    static_configs:
+      - targets: ["node-exporter:9100"]
