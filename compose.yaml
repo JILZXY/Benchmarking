@@ -233,6 +233,7 @@ services:
       args:
         PYTHON_IMAGE: ${RUNNER_PYTHON_IMAGE:-python:3.12.11-slim-bookworm}
     image: eticore-bench-runner:${RUNNER_IMAGE_TAG:-0.1.0}
+    container_name: ${COMPOSE_PROJECT_NAME:-eticore-bench}-orchestrator
     profiles: [runner]
     init: true
     restart: "no"

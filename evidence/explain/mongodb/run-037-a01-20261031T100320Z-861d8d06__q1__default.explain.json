@@ -1,0 +1,370 @@
+{
+  "artifact_file": "workloads/q1-unwind-filter-group/mongodb/q1_pipeline.json",
+  "artifact_sha256": "fbe762b85fbc676dd100db188850dc77fd2ff752d97824f232be8548065fdfd6",
+  "captured_at_utc": "2026-10-31T10:03:29Z",
+  "engine": "mongodb",
+  "explain_plan": {
+    "command": {
+      "$db": "eticore",
+      "aggregate": "intentos",
+      "cursor": {},
+      "pipeline": [
+        {
+          "$unwind": "$respuestas"
+        },
+        {
+          "$match": {
+            "respuestas.evaluacion.puntaje_maximo": {
+              "$gt": 5
+            }
+          }
+        },
+        {
+          "$project": {
+            "_id": 0,
+            "area": "$leccion.area",
+            "puntaje_ponderado": {
+              "$multiply": [
+                "$respuestas.evaluacion.puntaje_obtenido",
+                "$respuestas.evaluacion.ponderacion"
+              ]
+            },
+            "tema": "$respuestas.tema"
+          }
+        },
+        {
+          "$group": {
+            "_id": {
+              "area": "$area",
+              "tema": "$tema"
+            },
+            "promedio_puntaje_ponderado": {
+              "$avg": "$puntaje_ponderado"
+            },
+            "suma_puntaje_ponderado": {
+              "$sum": "$puntaje_ponderado"
+            },
+            "total_respuestas": {
+              "$sum": 1
+            }
+          }
+        },
+        {
+          "$project": {
+            "_id": 0,
+            "area": "$_id.area",
+            "promedio_puntaje_ponderado": {
+              "$round": [
+                "$promedio_puntaje_ponderado",
+                4
+              ]
+            },
+            "suma_puntaje_ponderado": {
+              "$round": [
+                "$suma_puntaje_ponderado",
+                4
+              ]
+            },
+            "tema": "$_id.tema",
+            "total_respuestas": 1
+          }
+        },
+        {
+          "$sort": {
+            "area": 1,
+            "tema": 1
+          }
+        }
+      ]
+    },
+    "explainVersion": "1",
+    "ok": 1.0,
+    "queryShapeHash": "89192D2AFF34ACD00410271C54B5F721F5326622CEB0C538CF71E3660F8D7A2F",
+    "serverInfo": {
+      "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a",
+      "host": "768b0c408d00",
+      "port": 27017,
+      "version": "8.0.12"
+    },
+    "serverParameters": {
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted",
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0
+    },
+    "stages": [
+      {
+        "$cursor": {
+          "executionStats": {
+            "executionStages": {
+              "advanced": 500000,
+              "executionTimeMillisEstimate": 282,
+              "inputStage": {
+                "advanced": 500000,
+                "direction": "forward",
+                "docsExamined": 500000,
+                "executionTimeMillisEstimate": 204,
+                "isEOF": 1,
+                "nReturned": 500000,
+                "needTime": 0,
+                "needYield": 0,
+                "restoreState": 186,
+                "saveState": 186,
+                "stage": "COLLSCAN",
+                "works": 500001
+              },
+              "isCached": false,
+              "isEOF": 1,
+              "nReturned": 500000,
+              "needTime": 0,
+              "needYield": 0,
+              "restoreState": 186,
+              "saveState": 186,
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "_id": 0,
+                "leccion.area": 1,
+                "respuestas": 1
+              },
+              "works": 500001
+            },
+            "executionSuccess": true,
+            "executionTimeMillis": 2105,
+            "nReturned": 500000,
+            "totalDocsExamined": 500000,
+            "totalKeysExamined": 0
+          },
+          "queryPlanner": {
+            "indexFilterSet": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxIndexedOrSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "namespace": "eticore.intentos",
+            "optimizationTimeMillis": 0,
+            "parsedQuery": {},
+            "planCacheKey": "7DE6AA5D",
+            "planCacheShapeHash": "6285BDD9",
+            "prunedSimilarIndexes": false,
+            "queryHash": "6285BDD9",
+            "rejectedPlans": [],
+            "winningPlan": {
+              "inputStage": {
+                "direction": "forward",
+                "stage": "COLLSCAN"
+              },
+              "isCached": false,
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "_id": 0,
+                "leccion.area": 1,
+                "respuestas": 1
+              }
+            }
+          }
+        },
+        "executionTimeMillisEstimate": 663,
+        "nReturned": 500000
+      },
+      {
+        "$unwind": {
+          "path": "$respuestas"
+        },
+        "executionTimeMillisEstimate": 896,
+        "nReturned": 1500082
+      },
+      {
+        "$match": {
+          "respuestas.evaluacion.puntaje_maximo": {
+            "$gt": 5
+          }
+        },
+        "executionTimeMillisEstimate": 1264,
+        "nReturned": 1000316
+      },
+      {
+        "$project": {
+          "_id": false,
+          "area": "$leccion.area",
+          "puntaje_ponderado": {
+            "$multiply": [
+              "$respuestas.evaluacion.puntaje_obtenido",
+              "$respuestas.evaluacion.ponderacion"
+            ]
+          },
+          "tema": "$respuestas.tema"
+        },
+        "executionTimeMillisEstimate": 1946,
+        "nReturned": 1000316
+      },
+      {
+        "$group": {
+          "_id": {
+            "area": "$area",
+            "tema": "$tema"
+          },
+          "promedio_puntaje_ponderado": {
+            "$avg": "$puntaje_ponderado"
+          },
+          "suma_puntaje_ponderado": {
+            "$sum": "$puntaje_ponderado"
+          },
+          "total_respuestas": {
+            "$sum": {
+              "$const": 1
+            }
+          }
+        },
+        "executionTimeMillisEstimate": 2098,
+        "maxAccumulatorMemoryUsageBytes": {
+          "promedio_puntaje_ponderado": 14976,
+          "suma_puntaje_ponderado": 18432,
+          "total_respuestas": 18432
+        },
+        "nReturned": 144,
+        "numBytesSpilledEstimate": 0,
+        "spilledDataStorageSize": 0,
+        "spilledRecords": 0,
+        "spills": 0,
+        "totalOutputDataSizeBytes": 96360,
+        "usedDisk": false
+      },
+      {
+        "$project": {
+          "_id": false,
+          "area": "$_id.area",
+          "promedio_puntaje_ponderado": {
+            "$round": [
+              "$promedio_puntaje_ponderado",
+              {
+                "$const": 4
+              }
+            ]
+          },
+          "suma_puntaje_ponderado": {
+            "$round": [
+              "$suma_puntaje_ponderado",
+              {
+                "$const": 4
+              }
+            ]
+          },
+          "tema": "$_id.tema",
+          "total_respuestas": true
+        },
+        "executionTimeMillisEstimate": 2098,
+        "nReturned": 144
+      },
+      {
+        "$sort": {
+          "sortKey": {
+            "area": 1,
+            "tema": 1
+          }
+        },
+        "executionTimeMillisEstimate": 2098,
+        "nReturned": 144,
+        "spilledDataStorageSize": 0,
+        "spills": 0,
+        "totalDataSizeSortedBytesEstimate": 79968,
+        "usedDisk": false
+      }
+    ]
+  },
+  "options": {},
+  "profile": "PROFILE_C_SEVERE",
+  "query_code": "Q1",
+  "query_source": {
+    "collection": "intentos",
+    "engine": "mongodb",
+    "options": {},
+    "pipeline": [
+      {
+        "$unwind": "$respuestas"
+      },
+      {
+        "$match": {
+          "respuestas.evaluacion.puntaje_maximo": {
+            "$gt": 5
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": 0,
+          "area": "$leccion.area",
+          "puntaje_ponderado": {
+            "$multiply": [
+              "$respuestas.evaluacion.puntaje_obtenido",
+              "$respuestas.evaluacion.ponderacion"
+            ]
+          },
+          "tema": "$respuestas.tema"
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "area": "$area",
+            "tema": "$tema"
+          },
+          "promedio_puntaje_ponderado": {
+            "$avg": "$puntaje_ponderado"
+          },
+          "suma_puntaje_ponderado": {
+            "$sum": "$puntaje_ponderado"
+          },
+          "total_respuestas": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": 0,
+          "area": "$_id.area",
+          "promedio_puntaje_ponderado": {
+            "$round": [
+              "$promedio_puntaje_ponderado",
+              4
+            ]
+          },
+          "suma_puntaje_ponderado": {
+            "$round": [
+              "$suma_puntaje_ponderado",
+              4
+            ]
+          },
+          "tema": "$_id.tema",
+          "total_respuestas": 1
+        }
+      },
+      {
+        "$sort": {
+          "area": 1,
+          "tema": 1
+        }
+      }
+    ],
+    "query_code": "Q1",
+    "variant_id": "default",
+    "version": "1.0.0",
+    "workload_id": "q1-unwind-filter-group"
+  },
+  "run_id": "run-037-a01-20261031T100320Z-861d8d06",
+  "session_settings": {},
+  "spill_evidence_from_plan": {
+    "bytes_spilled": null,
+    "details": {},
+    "detected": false,
+    "sources": []
+  },
+  "variant_id": "default",
+  "workload_id": "q1-unwind-filter-group",
+  "workload_version": "1.0.0"
+}

@@ -1,0 +1,521 @@
+{
+  "artifact_file": "workloads/q1-unwind-filter-group/postgresql/q1_query.sql",
+  "artifact_sha256": "f06c5f8137ed8dc3bb0ace0f12c9e9d05a252a8c9fb84483c2e53ca610896460",
+  "captured_at_utc": "2026-10-31T12:17:51Z",
+  "engine": "postgresql",
+  "explain_plan": [
+    {
+      "Execution Time": 2974.721,
+      "JIT": {
+        "Functions": 17,
+        "Options": {
+          "Deforming": true,
+          "Expressions": true,
+          "Inlining": true,
+          "Optimization": true
+        },
+        "Timing": {
+          "Emission": 53.438,
+          "Generation": {
+            "Deform": 0.291,
+            "Total": 0.933
+          },
+          "Inlining": 145.615,
+          "Optimization": 57.527,
+          "Total": 257.513
+        }
+      },
+      "Plan": {
+        "Actual Loops": 1,
+        "Actual Rows": 144,
+        "Actual Startup Time": 1093.253,
+        "Actual Total Time": 2891.781,
+        "Async Capable": false,
+        "Group Key": [
+          "((i.payload #>> '{leccion,area}'::text[]))",
+          "((r.elem ->> 'tema'::text))"
+        ],
+        "Local Dirtied Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local I/O Read Time": 0.0,
+        "Local I/O Write Time": 0.0,
+        "Local Read Blocks": 0,
+        "Local Written Blocks": 0,
+        "Node Type": "Aggregate",
+        "Output": [
+          "((i.payload #>> '{leccion,area}'::text[]))",
+          "((r.elem ->> 'tema'::text))",
+          "count(*)",
+          "(round(sum((((r.elem #>> '{evaluacion,puntaje_obtenido}'::text[]))::numeric * ((r.elem #>> '{evaluacion,ponderacion}'::text[]))::numeric)), 4))::double precision",
+          "(round(avg((((r.elem #>> '{evaluacion,puntaje_obtenido}'::text[]))::numeric * ((r.elem #>> '{evaluacion,ponderacion}'::text[]))::numeric)), 4))::double precision"
+        ],
+        "Parallel Aware": false,
+        "Partial Mode": "Simple",
+        "Plan Rows": 16520955,
+        "Plan Width": 88,
+        "Plans": [
+          {
+            "Actual Loops": 1,
+            "Actual Rows": 1000316,
+            "Actual Startup Time": 1089.93,
+            "Actual Total Time": 2497.782,
+            "Async Capable": false,
+            "Full-sort Groups": {
+              "Group Count": 6,
+              "Sort Methods Used": [
+                "quicksort"
+              ],
+              "Sort Space Memory": {
+                "Average Sort Space Used": 42,
+                "Peak Sort Space Used": 42
+              }
+            },
+            "Local Dirtied Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local I/O Read Time": 0.0,
+            "Local I/O Write Time": 0.0,
+            "Local Read Blocks": 0,
+            "Local Written Blocks": 0,
+            "Node Type": "Incremental Sort",
+            "Output": [
+              "((i.payload #>> '{leccion,area}'::text[]))",
+              "((r.elem ->> 'tema'::text))",
+              "r.elem"
+            ],
+            "Parallel Aware": false,
+            "Parent Relationship": "Outer",
+            "Plan Rows": 16520955,
+            "Plan Width": 96,
+            "Plans": [
+              {
+                "Actual Loops": 1,
+                "Actual Rows": 1000316,
+                "Actual Startup Time": 808.885,
+                "Actual Total Time": 1995.69,
+                "Async Capable": false,
+                "Inner Unique": false,
+                "Join Type": "Inner",
+                "Local Dirtied Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local I/O Read Time": 0.0,
+                "Local I/O Write Time": 0.0,
+                "Local Read Blocks": 0,
+                "Local Written Blocks": 0,
+                "Node Type": "Nested Loop",
+                "Output": [
+                  "(i.payload #>> '{leccion,area}'::text[])",
+                  "(r.elem ->> 'tema'::text)",
+                  "r.elem"
+                ],
+                "Parallel Aware": false,
+                "Parent Relationship": "Outer",
+                "Plan Rows": 16520955,
+                "Plan Width": 96,
+                "Plans": [
+                  {
+                    "Actual Loops": 1,
+                    "Actual Rows": 500000,
+                    "Actual Startup Time": 808.106,
+                    "Actual Total Time": 1248.567,
+                    "Async Capable": false,
+                    "Local Dirtied Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local I/O Read Time": 0.0,
+                    "Local I/O Write Time": 0.0,
+                    "Local Read Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Node Type": "Gather Merge",
+                    "Output": [
+                      "i.payload"
+                    ],
+                    "Parallel Aware": false,
+                    "Parent Relationship": "Outer",
+                    "Plan Rows": 500635,
+                    "Plan Width": 1328,
+                    "Plans": [
+                      {
+                        "Actual Loops": 3,
+                        "Actual Rows": 166667,
+                        "Actual Startup Time": 786.355,
+                        "Actual Total Time": 848.837,
+                        "Async Capable": false,
+                        "Local Dirtied Blocks": 0,
+                        "Local Hit Blocks": 0,
+                        "Local I/O Read Time": 0.0,
+                        "Local I/O Write Time": 0.0,
+                        "Local Read Blocks": 0,
+                        "Local Written Blocks": 0,
+                        "Node Type": "Sort",
+                        "Output": [
+                          "i.payload",
+                          "((i.payload #>> '{leccion,area}'::text[]))"
+                        ],
+                        "Parallel Aware": false,
+                        "Parent Relationship": "Outer",
+                        "Plan Rows": 208598,
+                        "Plan Width": 1328,
+                        "Plans": [
+                          {
+                            "Actual Loops": 3,
+                            "Actual Rows": 166667,
+                            "Actual Startup Time": 85.754,
+                            "Actual Total Time": 319.268,
+                            "Alias": "i",
+                            "Async Capable": false,
+                            "Local Dirtied Blocks": 0,
+                            "Local Hit Blocks": 0,
+                            "Local I/O Read Time": 0.0,
+                            "Local I/O Write Time": 0.0,
+                            "Local Read Blocks": 0,
+                            "Local Written Blocks": 0,
+                            "Node Type": "Seq Scan",
+                            "Output": [
+                              "i.payload",
+                              "(i.payload #>> '{leccion,area}'::text[])"
+                            ],
+                            "Parallel Aware": true,
+                            "Parent Relationship": "Outer",
+                            "Plan Rows": 208598,
+                            "Plan Width": 1328,
+                            "Relation Name": "intentos",
+                            "Schema": "public",
+                            "Shared Dirtied Blocks": 0,
+                            "Shared Hit Blocks": 256,
+                            "Shared I/O Read Time": 564.183,
+                            "Shared I/O Write Time": 0.0,
+                            "Shared Read Blocks": 91236,
+                            "Shared Written Blocks": 0,
+                            "Startup Cost": 0.0,
+                            "Temp I/O Read Time": 0.0,
+                            "Temp I/O Write Time": 0.0,
+                            "Temp Read Blocks": 0,
+                            "Temp Written Blocks": 0,
+                            "Total Cost": 93577.98,
+                            "Workers": [
+                              {
+                                "Actual Loops": 1,
+                                "Actual Rows": 169695,
+                                "Actual Startup Time": 56.748,
+                                "Actual Total Time": 308.439,
+                                "Local Dirtied Blocks": 0,
+                                "Local Hit Blocks": 0,
+                                "Local I/O Read Time": 0.0,
+                                "Local I/O Write Time": 0.0,
+                                "Local Read Blocks": 0,
+                                "Local Written Blocks": 0,
+                                "Shared Dirtied Blocks": 0,
+                                "Shared Hit Blocks": 114,
+                                "Shared I/O Read Time": 204.196,
+                                "Shared I/O Write Time": 0.0,
+                                "Shared Read Blocks": 30977,
+                                "Shared Written Blocks": 0,
+                                "Temp I/O Read Time": 0.0,
+                                "Temp I/O Write Time": 0.0,
+                                "Temp Read Blocks": 0,
+                                "Temp Written Blocks": 0,
+                                "Worker Number": 0
+                              },
+                              {
+                                "Actual Loops": 1,
+                                "Actual Rows": 174654,
+                                "Actual Startup Time": 56.763,
+                                "Actual Total Time": 310.84,
+                                "Local Dirtied Blocks": 0,
+                                "Local Hit Blocks": 0,
+                                "Local I/O Read Time": 0.0,
+                                "Local I/O Write Time": 0.0,
+                                "Local Read Blocks": 0,
+                                "Local Written Blocks": 0,
+                                "Shared Dirtied Blocks": 0,
+                                "Shared Hit Blocks": 80,
+                                "Shared I/O Read Time": 207.626,
+                                "Shared I/O Write Time": 0.0,
+                                "Shared Read Blocks": 31857,
+                                "Shared Written Blocks": 0,
+                                "Temp I/O Read Time": 0.0,
+                                "Temp I/O Write Time": 0.0,
+                                "Temp Read Blocks": 0,
+                                "Temp Written Blocks": 0,
+                                "Worker Number": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "Shared Dirtied Blocks": 0,
+                        "Shared Hit Blocks": 370,
+                        "Shared I/O Read Time": 564.183,
+                        "Shared I/O Write Time": 0.0,
+                        "Shared Read Blocks": 91236,
+                        "Shared Written Blocks": 0,
+                        "Sort Key": [
+                          "((i.payload #>> '{leccion,area}'::text[]))"
+                        ],
+                        "Sort Method": "external merge",
+                        "Sort Space Type": "Disk",
+                        "Sort Space Used": 206232,
+                        "Startup Cost": 352996.99,
+                        "Temp I/O Read Time": 210.042,
+                        "Temp I/O Write Time": 936.155,
+                        "Temp Read Blocks": 165643,
+                        "Temp Written Blocks": 165812,
+                        "Total Cost": 353518.49,
+                        "Workers": [
+                          {
+                            "Actual Loops": 1,
+                            "Actual Rows": 169695,
+                            "Actual Startup Time": 794.009,
+                            "Actual Total Time": 861.076,
+                            "JIT": {
+                              "Functions": 2,
+                              "Options": {
+                                "Deforming": true,
+                                "Expressions": true,
+                                "Inlining": true,
+                                "Optimization": true
+                              },
+                              "Timing": {
+                                "Emission": 8.491,
+                                "Generation": {
+                                  "Deform": 0.092,
+                                  "Total": 0.245
+                                },
+                                "Inlining": 41.206,
+                                "Optimization": 6.586,
+                                "Total": 56.528
+                              }
+                            },
+                            "Local Dirtied Blocks": 0,
+                            "Local Hit Blocks": 0,
+                            "Local I/O Read Time": 0.0,
+                            "Local I/O Write Time": 0.0,
+                            "Local Read Blocks": 0,
+                            "Local Written Blocks": 0,
+                            "Shared Dirtied Blocks": 0,
+                            "Shared Hit Blocks": 171,
+                            "Shared I/O Read Time": 204.196,
+                            "Shared I/O Write Time": 0.0,
+                            "Shared Read Blocks": 30977,
+                            "Shared Written Blocks": 0,
+                            "Sort Method": "external merge",
+                            "Sort Space Type": "Disk",
+                            "Sort Space Used": 225024,
+                            "Temp I/O Read Time": 71.086,
+                            "Temp I/O Write Time": 325.251,
+                            "Temp Read Blocks": 56252,
+                            "Temp Written Blocks": 56309,
+                            "Worker Number": 0
+                          },
+                          {
+                            "Actual Loops": 1,
+                            "Actual Rows": 174654,
+                            "Actual Startup Time": 781.907,
+                            "Actual Total Time": 848.576,
+                            "JIT": {
+                              "Functions": 2,
+                              "Options": {
+                                "Deforming": true,
+                                "Expressions": true,
+                                "Inlining": true,
+                                "Optimization": true
+                              },
+                              "Timing": {
+                                "Emission": 8.819,
+                                "Generation": {
+                                  "Deform": 0.026,
+                                  "Total": 0.148
+                                },
+                                "Inlining": 41.571,
+                                "Optimization": 6.299,
+                                "Total": 56.837
+                              }
+                            },
+                            "Local Dirtied Blocks": 0,
+                            "Local Hit Blocks": 0,
+                            "Local I/O Read Time": 0.0,
+                            "Local I/O Write Time": 0.0,
+                            "Local Read Blocks": 0,
+                            "Local Written Blocks": 0,
+                            "Shared Dirtied Blocks": 0,
+                            "Shared Hit Blocks": 137,
+                            "Shared I/O Read Time": 207.626,
+                            "Shared I/O Write Time": 0.0,
+                            "Shared Read Blocks": 31857,
+                            "Shared Written Blocks": 0,
+                            "Sort Method": "external merge",
+                            "Sort Space Type": "Disk",
+                            "Sort Space Used": 231384,
+                            "Temp I/O Read Time": 72.802,
+                            "Temp I/O Write Time": 311.288,
+                            "Temp Read Blocks": 57838,
+                            "Temp Written Blocks": 57897,
+                            "Worker Number": 1
+                          }
+                        ]
+                      }
+                    ],
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Hit Blocks": 370,
+                    "Shared I/O Read Time": 564.183,
+                    "Shared I/O Write Time": 0.0,
+                    "Shared Read Blocks": 91236,
+                    "Shared Written Blocks": 0,
+                    "Startup Cost": 353997.02,
+                    "Temp I/O Read Time": 210.042,
+                    "Temp I/O Write Time": 936.155,
+                    "Temp Read Blocks": 165643,
+                    "Temp Written Blocks": 165812,
+                    "Total Cost": 412304.21,
+                    "Workers Launched": 2,
+                    "Workers Planned": 2
+                  },
+                  {
+                    "Actual Loops": 500000,
+                    "Actual Rows": 2,
+                    "Actual Startup Time": 0.001,
+                    "Actual Total Time": 0.001,
+                    "Alias": "r",
+                    "Async Capable": false,
+                    "Filter": "(((r.elem #>> '{evaluacion,puntaje_maximo}'::text[]))::integer > 5)",
+                    "Function Call": "jsonb_array_elements((i.payload -> 'respuestas'::text))",
+                    "Function Name": "jsonb_array_elements",
+                    "Local Dirtied Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local I/O Read Time": 0.0,
+                    "Local I/O Write Time": 0.0,
+                    "Local Read Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Node Type": "Function Scan",
+                    "Output": [
+                      "r.elem"
+                    ],
+                    "Parallel Aware": false,
+                    "Parent Relationship": "Inner",
+                    "Plan Rows": 33,
+                    "Plan Width": 32,
+                    "Rows Removed by Filter": 1,
+                    "Schema": "pg_catalog",
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Hit Blocks": 0,
+                    "Shared I/O Read Time": 0.0,
+                    "Shared I/O Write Time": 0.0,
+                    "Shared Read Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Startup Cost": 0.01,
+                    "Temp I/O Read Time": 0.0,
+                    "Temp I/O Write Time": 0.0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0,
+                    "Total Cost": 2.0
+                  }
+                ],
+                "Shared Dirtied Blocks": 0,
+                "Shared Hit Blocks": 370,
+                "Shared I/O Read Time": 564.183,
+                "Shared I/O Write Time": 0.0,
+                "Shared Read Blocks": 91236,
+                "Shared Written Blocks": 0,
+                "Startup Cost": 353997.02,
+                "Temp I/O Read Time": 210.042,
+                "Temp I/O Write Time": 936.155,
+                "Temp Read Blocks": 165643,
+                "Temp Written Blocks": 165812,
+                "Total Cost": 1661388.54
+              }
+            ],
+            "Pre-sorted Groups": {
+              "Group Count": 6,
+              "Sort Methods Used": [
+                "external merge"
+              ],
+              "Sort Space Disk": {
+                "Average Sort Space Used": 45578,
+                "Peak Sort Space Used": 45696
+              }
+            },
+            "Presorted Key": [
+              "((i.payload #>> '{leccion,area}'::text[]))"
+            ],
+            "Shared Dirtied Blocks": 0,
+            "Shared Hit Blocks": 370,
+            "Shared I/O Read Time": 564.183,
+            "Shared I/O Write Time": 0.0,
+            "Shared Read Blocks": 91236,
+            "Shared Written Blocks": 0,
+            "Sort Key": [
+              "((i.payload #>> '{leccion,area}'::text[]))",
+              "((r.elem ->> 'tema'::text))"
+            ],
+            "Startup Cost": 354000.47,
+            "Temp I/O Read Time": 238.053,
+            "Temp I/O Write Time": 1040.028,
+            "Temp Read Blocks": 199344,
+            "Temp Written Blocks": 199585,
+            "Total Cost": 2294604.22
+          }
+        ],
+        "Shared Dirtied Blocks": 0,
+        "Shared Hit Blocks": 370,
+        "Shared I/O Read Time": 564.183,
+        "Shared I/O Write Time": 0.0,
+        "Shared Read Blocks": 91236,
+        "Shared Written Blocks": 0,
+        "Startup Cost": 354000.47,
+        "Strategy": "Sorted",
+        "Temp I/O Read Time": 238.053,
+        "Temp I/O Write Time": 1040.028,
+        "Temp Read Blocks": 199344,
+        "Temp Written Blocks": 199585,
+        "Total Cost": 3244559.14
+      },
+      "Planning": {
+        "Local Dirtied Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local I/O Read Time": 0.0,
+        "Local I/O Write Time": 0.0,
+        "Local Read Blocks": 0,
+        "Local Written Blocks": 0,
+        "Shared Dirtied Blocks": 0,
+        "Shared Hit Blocks": 232,
+        "Shared I/O Read Time": 0.009,
+        "Shared I/O Write Time": 0.0,
+        "Shared Read Blocks": 2,
+        "Shared Written Blocks": 0,
+        "Temp I/O Read Time": 0.0,
+        "Temp I/O Write Time": 0.0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0
+      },
+      "Planning Time": 0.429,
+      "Query Identifier": 562573593858383807,
+      "Settings": {
+        "effective_cache_size": "2GB"
+      },
+      "Triggers": []
+    }
+  ],
+  "options": {},
+  "profile": "PROFILE_A_BASELINE",
+  "query_code": "Q1",
+  "query_source": "-- =============================================================================\n-- Q1 \u2014 Unwind, Filter & Grouping (PostgreSQL JSONB)\n-- Version: 1.0.0 | Variant: default\n-- =============================================================================\n-- Equivalencia l\u00f3gica exacta con workloads/q1-unwind-filter-group/mongodb/q1_pipeline.json:\n--   1. Desanida el arreglo `respuestas` con `jsonb_array_elements(i.payload->'respuestas')`.\n--   2. Filtra respuestas con `(r->'evaluacion'->>'puntaje_maximo')::int > 5`.\n--   3. Calcula `puntaje_ponderado = puntaje_obtenido * ponderacion`.\n--   4. Agrupa por `leccion.area` y `respuestas.tema`, ordenando por `(area, tema)`.\n-- =============================================================================\n\nSELECT\n    i.payload #>> '{leccion,area}' AS area,\n    r.elem ->> 'tema' AS tema,\n    COUNT(*)::bigint AS total_respuestas,\n    ROUND(\n        SUM(\n            ((r.elem #>> '{evaluacion,puntaje_obtenido}')::numeric)\n            * ((r.elem #>> '{evaluacion,ponderacion}')::numeric)\n        ),\n        4\n    )::double precision AS suma_puntaje_ponderado,\n    ROUND(\n        AVG(\n            ((r.elem #>> '{evaluacion,puntaje_obtenido}')::numeric)\n            * ((r.elem #>> '{evaluacion,ponderacion}')::numeric)\n        ),\n        4\n    )::double precision AS promedio_puntaje_ponderado\nFROM public.intentos AS i\nCROSS JOIN LATERAL jsonb_array_elements(i.payload -> 'respuestas') AS r(elem)\nWHERE ((r.elem #>> '{evaluacion,puntaje_maximo}')::integer) > 5\nGROUP BY\n    i.payload #>> '{leccion,area}',\n    r.elem ->> 'tema'\nORDER BY\n    area ASC,\n    tema ASC;\n\n",
+  "run_id": "run-055-a01-20261031T121740Z-14258175",
+  "session_settings": {},
+  "spill_evidence_from_plan": {
+    "bytes_spilled": 6665207808,
+    "details": {
+      "explain_spill_nodes": [
+        "Aggregate",
+        "Gather Merge",
+        "Incremental Sort",
+        "Nested Loop",
+        "Sort (external merge)"
+      ]
+    },
+    "detected": true,
+    "sources": [
+      "postgresql.explain.temp_or_disk_sort"
+    ]
+  },
+  "variant_id": "default",
+  "workload_id": "q1-unwind-filter-group",
+  "workload_version": "1.0.0"
+}

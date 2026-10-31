@@ -1,0 +1,86 @@
+{
+  "workloads_version": "1.0.0",
+  "collection_or_table": "intentos",
+  "queries": {
+    "Q1": {
+      "id": "q1-unwind-filter-group",
+      "name": "Q1 — Unwind, Filter & Grouping",
+      "version": "1.0.0",
+      "description": "Desanida respuestas, filtra evaluacion.puntaje_maximo > 5, calcula puntaje_ponderado = puntaje_obtenido * ponderacion y agrupa por leccion.area y respuestas.tema.",
+      "output_fields": [
+        "area",
+        "tema",
+        "total_respuestas",
+        "suma_puntaje_ponderado",
+        "promedio_puntaje_ponderado"
+      ],
+      "variants": {
+        "mongodb": [
+          {
+            "variant_id": "default",
+            "options": {},
+            "file": "workloads/q1-unwind-filter-group/mongodb/q1_pipeline.json"
+          }
+        ],
+        "postgresql": [
+          {
+            "variant_id": "default",
+            "session_settings": {},
+            "file": "workloads/q1-unwind-filter-group/postgresql/q1_query.sql"
+          }
+        ]
+      }
+    },
+    "Q2": {
+      "id": "q2-sort-topk",
+      "name": "Q2 — Massive Sort + Top-K",
+      "version": "1.0.0",
+      "description": "Filtra intentos con estado = 'completado', ordena por resultado.porcentaje DESC (desempate determinista por intento_id ASC) y devuelve los primeros 1,000 resultados.",
+      "output_fields": [
+        "intento_id",
+        "usuario_id",
+        "leccion_id",
+        "fecha_inicio",
+        "estado",
+        "porcentaje",
+        "puntaje_total",
+        "duracion_segundos"
+      ],
+      "variants": {
+        "mongodb": [
+          {
+            "variant_id": "allowDiskUse_false",
+            "options": {
+              "allowDiskUse": false
+            },
+            "file": "workloads/q2-sort-topk/mongodb/q2_allow_disk_use_false.json"
+          },
+          {
+            "variant_id": "allowDiskUse_true",
+            "options": {
+              "allowDiskUse": true
+            },
+            "file": "workloads/q2-sort-topk/mongodb/q2_allow_disk_use_true.json"
+          }
+        ],
+        "postgresql": [
+          {
+            "variant_id": "work_mem_4MB",
+            "session_settings": {
+              "work_mem": "4MB"
+            },
+            "file": "workloads/q2-sort-topk/postgresql/q2_work_mem_4mb.sql"
+          },
+          {
+            "variant_id": "work_mem_64MB",
+            "session_settings": {
+              "work_mem": "64MB"
+            },
+            "file": "workloads/q2-sort-topk/postgresql/q2_work_mem_64mb.sql"
+          }
+        ]
+      }
+    }
+  }
+}
+

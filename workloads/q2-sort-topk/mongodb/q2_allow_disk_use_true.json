@@ -1,0 +1,41 @@
+{
+  "workload_id": "q2-sort-topk",
+  "query_code": "Q2",
+  "version": "1.0.0",
+  "engine": "mongodb",
+  "variant_id": "allowDiskUse_true",
+  "collection": "intentos",
+  "options": {
+    "allowDiskUse": true
+  },
+  "pipeline": [
+    {
+      "$match": {
+        "estado": "completado"
+      }
+    },
+    {
+      "$sort": {
+        "resultado.porcentaje": -1,
+        "intento_id": 1
+      }
+    },
+    {
+      "$limit": 1000
+    },
+    {
+      "$project": {
+        "_id": 0,
+        "intento_id": 1,
+        "usuario_id": 1,
+        "leccion_id": 1,
+        "fecha_inicio": 1,
+        "estado": 1,
+        "porcentaje": "$resultado.porcentaje",
+        "puntaje_total": "$resultado.puntaje_total",
+        "duracion_segundos": "$resultado.duracion_segundos"
+      }
+    }
+  ]
+}
+

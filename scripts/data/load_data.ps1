@@ -19,11 +19,22 @@ $ErrorActionPreference = 'Stop'
 $root = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 
 $scriptMap = @{
-    'mongodb'    = 'runner\python\src\load\mongodb_loader.py'
-    'postgresql' = 'runner\python\src\load\postgresql_loader.py'
-    'verify'     = 'runner\python\src\load\verify_load.py'
+    'mongodb'    = 'runner/src/load/mongodb_loader.py'
+    'postgresql' = 'runner/src/load/postgresql_loader.py'
+    'verify'     = 'runner/src/load/verify_load.py'
 }
 
-& python (Join-Path $root $scriptMap[$Action.ToLower()]) @LoaderArgs
-exit $LASTEXITCODE
+& python -c "import pymongo, psycopg" *> $null
+if ($LASTEXITCODE -eq 0) {
+    $hostMap = @{
+        'mongodb'    = 'runner\python\src\load\mongodb_loader.py'
+        'postgresql' = 'runner\python\src\load\postgresql_loader.py'
+        'verify'     = 'runner\python\src\load\verify_load.py'
+    }
+    & python (Join-Path $root $hostMap[$Action.ToLower()]) @LoaderArgs
+    exit $LASTEXITCODE
+} else {
+    & (Join-Path $root 'scripts\setup\compose.ps1') a --profile runner run --rm runner python ("/app/" + $scriptMap[$Action.ToLower()]) @LoaderArgs
+    exit $LASTEXITCODE
+}
 

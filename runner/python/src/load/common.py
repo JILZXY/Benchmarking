@@ -9,7 +9,8 @@ import os
 from pathlib import Path
 from typing import Any, Iterator
 
-ROOT = Path(__file__).resolve().parents[4]
+_CANDIDATE_ROOT = Path(__file__).resolve().parents[4]
+ROOT = _CANDIDATE_ROOT if (_CANDIDATE_ROOT / "dataset").exists() else Path("/app")
 
 
 @dataclass(frozen=True)

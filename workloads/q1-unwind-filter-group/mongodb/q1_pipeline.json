@@ -1,0 +1,72 @@
+{
+  "workload_id": "q1-unwind-filter-group",
+  "query_code": "Q1",
+  "version": "1.0.0",
+  "engine": "mongodb",
+  "variant_id": "default",
+  "collection": "intentos",
+  "options": {},
+  "pipeline": [
+    {
+      "$unwind": "$respuestas"
+    },
+    {
+      "$match": {
+        "respuestas.evaluacion.puntaje_maximo": {
+          "$gt": 5
+        }
+      }
+    },
+    {
+      "$project": {
+        "_id": 0,
+        "area": "$leccion.area",
+        "tema": "$respuestas.tema",
+        "puntaje_ponderado": {
+          "$multiply": [
+            "$respuestas.evaluacion.puntaje_obtenido",
+            "$respuestas.evaluacion.ponderacion"
+          ]
+        }
+      }
+    },
+    {
+      "$group": {
+        "_id": {
+          "area": "$area",
+          "tema": "$tema"
+        },
+        "total_respuestas": {
+          "$sum": 1
+        },
+        "suma_puntaje_ponderado": {
+          "$sum": "$puntaje_ponderado"
+        },
+        "promedio_puntaje_ponderado": {
+          "$avg": "$puntaje_ponderado"
+        }
+      }
+    },
+    {
+      "$project": {
+        "_id": 0,
+        "area": "$_id.area",
+        "tema": "$_id.tema",
+        "total_respuestas": 1,
+        "suma_puntaje_ponderado": {
+          "$round": ["$suma_puntaje_ponderado", 4]
+        },
+        "promedio_puntaje_ponderado": {
+          "$round": ["$promedio_puntaje_ponderado", 4]
+        }
+      }
+    },
+    {
+      "$sort": {
+        "area": 1,
+        "tema": 1
+      }
+    }
+  ]
+}
+

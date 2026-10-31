@@ -1,0 +1,71 @@
+{
+  "matrix_version": "1.0.0",
+  "description": "Matriz experimental oficial ETICORE DB Benchmark: 2 motores x 3 perfiles x 2 consultas x 3 concurrencias x 3 repeticiones = 108 ejecuciones.",
+  "engines": [
+    "mongodb",
+    "postgresql"
+  ],
+  "profiles": [
+    {
+      "id": "PROFILE_A_BASELINE",
+      "short_code": "a",
+      "env_file": "config/profiles/profile_a_baseline.env",
+      "cpus": 4,
+      "memory_mb": 4096,
+      "swappiness": 0
+    },
+    {
+      "id": "PROFILE_B_MEDIUM",
+      "short_code": "b",
+      "env_file": "config/profiles/profile_b_medium.env",
+      "cpus": 2,
+      "memory_mb": 2048,
+      "swappiness": 0
+    },
+    {
+      "id": "PROFILE_C_SEVERE",
+      "short_code": "c",
+      "env_file": "config/profiles/profile_c_severe.env",
+      "cpus": 1,
+      "memory_mb": 1024,
+      "swappiness": 0
+    }
+  ],
+  "queries": [
+    "Q1",
+    "Q2"
+  ],
+  "default_variants": {
+    "mongodb": {
+      "Q1": "default",
+      "Q2": "allowDiskUse_false"
+    },
+    "postgresql": {
+      "Q1": "default",
+      "Q2": "work_mem_4MB"
+    }
+  },
+  "q2_all_variants": {
+    "mongodb": [
+      "allowDiskUse_false",
+      "allowDiskUse_true"
+    ],
+    "postgresql": [
+      "work_mem_4MB",
+      "work_mem_64MB"
+    ]
+  },
+  "concurrency_levels": [
+    1,
+    10,
+    50
+  ],
+  "repetitions": 3,
+  "expected_total_runs": 108,
+  "durations_seconds": {
+    "warmup": 60,
+    "measurement": 300,
+    "cooldown": 60
+  }
+}
+

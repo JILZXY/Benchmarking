@@ -23,8 +23,9 @@ import random
 import sys
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[4]
-SRC_DIR = ROOT / "runner" / "python" / "src"
+_CANDIDATE_ROOT = Path(__file__).resolve().parents[4]
+ROOT = _CANDIDATE_ROOT if (_CANDIDATE_ROOT / "dataset").exists() else Path("/app")
+SRC_DIR = Path(__file__).resolve().parents[1]
 for p in (ROOT, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))

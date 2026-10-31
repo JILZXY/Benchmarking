@@ -1,0 +1,16 @@
+{
+  "avg_respuestas_config": 3,
+  "avg_respuestas_observed": 3.0002,
+  "batch_size": 5000,
+  "file_name": "intentos_n500000_s20261030.jsonl",
+  "file_size_bytes": 529006464,
+  "generation_elapsed_seconds": 24.066,
+  "generator_version": "1.0.0",
+  "q1_qualifying_respuestas": 1000316,
+  "q2_completed_intentos": 360071,
+  "record_count": 500000,
+  "schema_version": "intento.v1",
+  "seed": 20261030,
+  "sha256": "d99651024aaa564bfcd8ef1a3d23430c1bbe56f53a49964a3170620213bde073",
+  "total_respuestas": 1500082
+}

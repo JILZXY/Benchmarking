@@ -1,0 +1,122 @@
+{
+  "empirical_interpretation": "Se observ\u00f3 el primer spill en run_id=run-055-a01-20261031T121740Z-14258175 (engine=postgresql, profile=PROFILE_A_BASELINE, workload=Q1:default, concurrency=1, repetition=1).",
+  "first_spill": {
+    "concurrency": 1,
+    "engine": "postgresql",
+    "profile": "PROFILE_A_BASELINE",
+    "repetition": 1,
+    "run_id": "run-055-a01-20261031T121740Z-14258175",
+    "sequence_index": 55,
+    "spill_bytes": 137465257984,
+    "status": "spill",
+    "workload": "Q1:default"
+  },
+  "generated_at_utc": "2026-10-31T13:48:50Z",
+  "oom_observed": false,
+  "oom_runs": [],
+  "spill_observed": true,
+  "spill_runs": [
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 1,
+      "run_id": "run-055-a01-20261031T121740Z-14258175",
+      "sequence_index": 55,
+      "spill_bytes": 137465257984,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 2,
+      "run_id": "run-056-a01-20261031T122454Z-47641781",
+      "sequence_index": 56,
+      "spill_bytes": 118373556224,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 3,
+      "run_id": "run-057-a01-20261031T123203Z-bd3e4b3a",
+      "sequence_index": 57,
+      "spill_bytes": 76368789504,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 1,
+      "run_id": "run-058-a01-20261031T123912Z-130ce81a",
+      "sequence_index": 58,
+      "spill_bytes": 76364472320,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 2,
+      "run_id": "run-059-a01-20261031T124624Z-758d1c28",
+      "sequence_index": 59,
+      "spill_bytes": 63954796544,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 3,
+      "run_id": "run-060-a01-20261031T125349Z-7d87586f",
+      "sequence_index": 60,
+      "spill_bytes": 42955268096,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 1,
+      "run_id": "run-061-a01-20261031T130107Z-d640a237",
+      "sequence_index": 61,
+      "spill_bytes": 47725756416,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 2,
+      "run_id": "run-062-a01-20261031T131051Z-d7c1e42d",
+      "sequence_index": 62,
+      "spill_bytes": 47725977600,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_A_BASELINE",
+      "repetition": 3,
+      "run_id": "run-063-a01-20261031T132030Z-58e48992",
+      "sequence_index": 63,
+      "spill_bytes": 0,
+      "status": "error",
+      "workload": "Q1:default"
+    }
+  ],
+  "total_oom_runs": 0,
+  "total_runs_evaluated": 68,
+  "total_spill_runs": 9
+}
