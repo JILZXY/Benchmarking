@@ -1,0 +1,21 @@
+{
+  "bytes_spilled": 42000572416,
+  "details": {
+    "delta_temp_bytes": 42000572416,
+    "delta_temp_files": 343,
+    "log_samples": [
+      "2026-10-31 15:01:23.773 UTC [1659] bench@eticore LOG:  temporary file: path \"base/pgsql_tmp/pgsql_tmp1659.1\", size 46612480",
+      "2026-10-31 15:01:23.773 UTC [1654] bench@eticore LOG:  temporary file: path \"base/pgsql_tmp/pgsql_tmp1654.1\", size 46612480",
+      "2026-10-31 15:01:28.436 UTC [1657] bench@eticore LOG:  temporary file: path \"base/pgsql_tmp/pgsql_tmp1657.1\", size 46612480",
+      "2026-10-31 15:01:32.611 UTC [1655] bench@eticore LOG:  temporary file: path \"base/pgsql_tmp/pgsql_tmp1655.1\", size 46612480",
+      "2026-10-31 15:01:58.321 UTC [1659] bench@eticore LOG:  temporary file: path \"base/pgsql_tmp/pgsql_tmp1659.2\", size 45064192"
+    ],
+    "log_temp_file_count": 343
+  },
+  "run_id": "run-077-a01-20261031T150053Z-c9dec60c",
+  "scenario_key": "postgresql__PROFILE_B_MEDIUM__Q1__default__c10__r2",
+  "sources": [
+    "postgresql.pg_stat_database.temp_bytes",
+    "postgresql.log.temporary_file"
+  ]
+}

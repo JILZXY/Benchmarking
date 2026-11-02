@@ -1,0 +1,14 @@
+{
+  "details": {
+    "State": {
+      "ExitCode": 0,
+      "OOMKilled": true,
+      "Status": "running"
+    }
+  },
+  "run_id": "run-108-a01-20261031T185117Z-cc74da85",
+  "scenario_key": "postgresql__PROFILE_C_SEVERE__Q2__work_mem_4MB__c50__r3",
+  "sources": [
+    "docker.State.OOMKilled"
+  ]
+}

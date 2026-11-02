@@ -1,0 +1,16 @@
+{
+  "bytes_spilled": 6665166848,
+  "details": {
+    "explain_spill_nodes": [
+      "Aggregate",
+      "Gather Merge",
+      "Incremental Sort",
+      "Nested Loop",
+      "Sort (external merge)"
+    ]
+  },
+  "detected": true,
+  "sources": [
+    "postgresql.explain.temp_or_disk_sort"
+  ]
+}

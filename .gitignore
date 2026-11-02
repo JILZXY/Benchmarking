@@ -25,9 +25,30 @@ results/telemetry/*
 # results/normalized, results/summaries, dataset/manifests y evidence/ SÍ se
 # versionan: son la evidencia del experimento.
 
+# --- Reporte técnico y artefactos de LaTeX / análisis ------------------------
+report/
+reporte_tecnico_latex/
+scratch/
+scratch_latex/
+
+# Archivos temporales y de compilación de LaTeX
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+
 # --- Sistema / editores --------------------------------------------------------
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
-

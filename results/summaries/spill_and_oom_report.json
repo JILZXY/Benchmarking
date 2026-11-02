@@ -11,9 +11,240 @@
     "status": "spill",
     "workload": "Q1:default"
   },
-  "generated_at_utc": "2026-10-31T13:48:50Z",
-  "oom_observed": false,
-  "oom_runs": [],
+  "generated_at_utc": "2026-10-31T20:26:45Z",
+  "oom_observed": true,
+  "oom_runs": [
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-079-a02-20261031T200935Z-16e94049",
+      "sequence_index": 79,
+      "status": "oom",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 3,
+      "run_id": "run-081-a01-20261031T153336Z-285cb1ae",
+      "sequence_index": 81,
+      "status": "oom",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-082-a01-20261031T154040Z-62bb4733",
+      "sequence_index": 82,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 2,
+      "run_id": "run-083-a01-20261031T154746Z-f515bf73",
+      "sequence_index": 83,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 3,
+      "run_id": "run-084-a01-20261031T155451Z-e3be26be",
+      "sequence_index": 84,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-085-a01-20261031T160156Z-03a07baf",
+      "sequence_index": 85,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 2,
+      "run_id": "run-086-a01-20261031T160904Z-419ed732",
+      "sequence_index": 86,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 3,
+      "run_id": "run-087-a01-20261031T161611Z-d12ce77e",
+      "sequence_index": 87,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-088-a01-20261031T162319Z-47a9686e",
+      "sequence_index": 88,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 2,
+      "run_id": "run-089-a01-20261031T163042Z-45fff5b3",
+      "sequence_index": 89,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 3,
+      "run_id": "run-090-a01-20261031T163809Z-45c29267",
+      "sequence_index": 90,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-097-a02-20261031T201932Z-736f1772",
+      "sequence_index": 97,
+      "status": "oom",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 2,
+      "run_id": "run-098-a01-20261031T173834Z-982b1568",
+      "sequence_index": 98,
+      "status": "oom",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 3,
+      "run_id": "run-099-a01-20261031T174541Z-ea595e06",
+      "sequence_index": 99,
+      "status": "oom",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-100-a01-20261031T175248Z-d24b6052",
+      "sequence_index": 100,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 2,
+      "run_id": "run-101-a01-20261031T175954Z-d4f44d32",
+      "sequence_index": 101,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 3,
+      "run_id": "run-102-a01-20261031T180659Z-8b63d1fe",
+      "sequence_index": 102,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-103-a01-20261031T181404Z-c420182b",
+      "sequence_index": 103,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 2,
+      "run_id": "run-104-a01-20261031T182114Z-e69895ac",
+      "sequence_index": 104,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 3,
+      "run_id": "run-105-a01-20261031T182825Z-b6bc471e",
+      "sequence_index": 105,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-106-a01-20261031T183535Z-67cf1227",
+      "sequence_index": 106,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 2,
+      "run_id": "run-107-a01-20261031T184328Z-08d4b4da",
+      "sequence_index": 107,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 3,
+      "run_id": "run-108-a01-20261031T185117Z-cc74da85",
+      "sequence_index": 108,
+      "status": "oom",
+      "workload": "Q2:work_mem_4MB"
+    }
+  ],
   "spill_observed": true,
   "spill_runs": [
     {
@@ -109,14 +340,179 @@
       "engine": "postgresql",
       "profile": "PROFILE_A_BASELINE",
       "repetition": 3,
-      "run_id": "run-063-a01-20261031T132030Z-58e48992",
+      "run_id": "run-063-a02-20261031T195905Z-431b11ae",
       "sequence_index": 63,
+      "spill_bytes": 96406224896,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-073-a01-20261031T143151Z-a583e7e5",
+      "sequence_index": 73,
+      "spill_bytes": 112644202496,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 2,
+      "run_id": "run-074-a01-20261031T143904Z-b702bcbd",
+      "sequence_index": 74,
+      "spill_bytes": 69686247424,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 3,
+      "run_id": "run-075-a01-20261031T144610Z-bae6cae6",
+      "sequence_index": 75,
+      "spill_bytes": 76368584704,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-076-a01-20261031T145318Z-66199c54",
+      "sequence_index": 76,
+      "spill_bytes": 51545792512,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 2,
+      "run_id": "run-077-a01-20261031T150053Z-c9dec60c",
+      "sequence_index": 77,
+      "spill_bytes": 42000572416,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 3,
+      "run_id": "run-078-a01-20261031T150814Z-eaabd296",
+      "sequence_index": 78,
+      "spill_bytes": 42955096064,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 1,
+      "run_id": "run-079-a02-20261031T200935Z-16e94049",
+      "sequence_index": 79,
       "spill_bytes": 0,
-      "status": "error",
+      "status": "oom",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_B_MEDIUM",
+      "repetition": 2,
+      "run_id": "run-080-a01-20261031T152234Z-04a0b2ff",
+      "sequence_index": 80,
+      "spill_bytes": 47725748224,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-091-a01-20261031T164534Z-20e94840",
+      "sequence_index": 91,
+      "spill_bytes": 87824064512,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 2,
+      "run_id": "run-092-a01-20261031T165249Z-5f0f3825",
+      "sequence_index": 92,
+      "spill_bytes": 68732903424,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 1,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 3,
+      "run_id": "run-093-a01-20261031T165958Z-7c76b4e1",
+      "sequence_index": 93,
+      "spill_bytes": 60140724224,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-094-a01-20261031T170706Z-70b9acd5",
+      "sequence_index": 94,
+      "spill_bytes": 30545952768,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 2,
+      "run_id": "run-095-a01-20261031T171507Z-e8575263",
+      "sequence_index": 95,
+      "spill_bytes": 28636430336,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 10,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 3,
+      "run_id": "run-096-a01-20261031T172321Z-66573236",
+      "sequence_index": 96,
+      "spill_bytes": 30545862656,
+      "status": "spill",
+      "workload": "Q1:default"
+    },
+    {
+      "concurrency": 50,
+      "engine": "postgresql",
+      "profile": "PROFILE_C_SEVERE",
+      "repetition": 1,
+      "run_id": "run-097-a02-20261031T201932Z-736f1772",
+      "sequence_index": 97,
+      "spill_bytes": 0,
+      "status": "oom",
       "workload": "Q1:default"
     }
   ],
-  "total_oom_runs": 0,
-  "total_runs_evaluated": 68,
-  "total_spill_runs": 9
+  "total_oom_runs": 23,
+  "total_runs_evaluated": 113,
+  "total_spill_runs": 24
 }
